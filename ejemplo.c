@@ -10,6 +10,7 @@ void getMycd(char*);
 void getMypwd();
 void getPrompt();
 void getMydir(char *);
+void getMycp(char*, char*);
 
 int main (){
   char ** items;
@@ -29,9 +30,11 @@ int main (){
     if(strcmp(items[0],"mycd") == 0 ){
       getMycd(items[1]);
     }else if( strcmp(items[0],"mypwd") == 0){
-      getMypwd(); 
+      getMypwd();
     }else if(strcmp(items[0],"mydir") == 0){
       getMydir(items[1]);
+    }else if(strcmp(items[0],"mycp") == 0){
+      getMycp(items[1], items[2]);
     }
   }
   liberaItems (items);
@@ -49,8 +52,8 @@ void getMypwd(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mypwd",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mypwd", NULL);
+      execl("/home/estudiantes/frank.castrillon/Command_Line/Commands/mypwd",
+            "/home/estudiantes/frank.castrillon/Command_Line/Commands/mypwd", NULL);
       break;
     default:
       wait(&status);
@@ -62,8 +65,8 @@ void getPrompt(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/prompt",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/prompt", NULL);
+      execl("/home/estudiantes/frank.castrillon/Command_Line/Commands/prompt",
+            "/home/estudiantes/frank.castrillon/Command_Line/Commands/prompt", NULL);
       break;
     default:
       wait(&status);
@@ -75,8 +78,21 @@ void getMydir(char* path){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mydir",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mydir",path, NULL);
+      execl("/home/estudiantes/frank.castrillon/Command_Line/Commands/mydir",
+            "/home/estudiantes/frank.castrillon/Command_Line/Commands/mydir",path, NULL);
+      break;
+    default:
+      wait(&status);
+  }
+}
+
+void getMycp(char* sourcePath, char* targetPath){
+  int status;
+  pid_t pid_p = fork();
+  switch(pid_p){
+    case 0:
+      execl("/home/estudiantes/frank.castrillon/Command_Line/Commands/mycp",
+            "/home/estudiantes/frank.castrillon/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
       break;
     default:
       wait(&status);
