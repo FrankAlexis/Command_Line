@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
         perror("Incomplete argument params"); 
         exit(2);
     }
-    fd = open( argv[1] , O_RDONLY | O_DIRECTORY );
+    fd = open(argv[1] , O_RDONLY | O_DIRECTORY );
     if (fd == -1){
         /*Imprime un mensaje estandar de error describiendo el ultimo error 
           encontrado durante  una llamada al sistema o una función de liberia.
@@ -57,8 +57,7 @@ int main(int argc, char *argv[]){
             bpos += d->d_reclen;
         }
     }
-
-    exit(EXIT_SUCCESS);
+    return 0;
 }
 char* getDirectoryType(char d_type){
     switch(d_type){
