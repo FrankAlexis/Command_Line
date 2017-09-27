@@ -24,6 +24,9 @@ int main(int argc, char *argv[]){
     struct directory*d;
     int bpos;
     char d_type;
+    for(int i=0; i< argc; i++){
+        printf("%d:%s\n",i,argv[i]);
+    }
     if( argc < 2){
         perror("Incomplete argument params"); 
         exit(2);
@@ -49,7 +52,7 @@ int main(int argc, char *argv[]){
         for (bpos = 0; bpos < nread;) {
             d = (struct directory*) (buf + bpos);
             d_type = *(buf + bpos + d->d_reclen - 1);
-            printf("%-10s ",getDirectoryType(d_type));
+            printf("|%-10s| ",getDirectoryType(d_type));
             printf("%s\n", d->d_name);
             bpos += d->d_reclen;
         }

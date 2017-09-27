@@ -4,9 +4,14 @@
 #include <errno.h>
 int main(int argc, char *argv[]){
     printf("\n");
+    char *p = getenv("USER");
+    if(p == NULL){ 
+        return EXIT_FAILURE;
+    }
+    printf("%s@:",p);
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)) != NULL){
-        printf("%s/", cwd);
+        printf("%s>", cwd);
     }else{
         perror("getcwd() error");
     }
