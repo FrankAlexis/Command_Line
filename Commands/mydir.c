@@ -27,23 +27,23 @@ int main(int argc, char *argv[]){
     for(int i=0; i< argc; i++){
         printf("%d:%s\n",i,argv[i]);
     }
-    if( argc < 2){
-        perror("Incomplete argument params"); 
-        exit(2);
+    if( argc != 2){
+        perror("Arguments error");
+        exit(EXIT_FAILURE);
     }
     fd = open(argv[1] , O_RDONLY | O_DIRECTORY );
     if (fd == -1){
-        /*Imprime un mensaje estandar de error describiendo el ultimo error 
+        /*Imprime un mensaje estandar de error describiendo el ultimo error
           encontrado durante  una llamada al sistema o una función de liberia.
         */
-        perror("open"); 
-        exit(3);
+        perror("open");
+        exit(EXIT_FAILURE);
     }
     for ( ; ; ) {
         nread = syscall(SYS_getdents, fd, buf, BUF_SIZE);
         if (nread == -1){
-            perror("getdent"); 
-            exit(4);
+            perror("getdent");
+            exit(EXIT_FAILURE);
         }
         if (nread == 0){
             break;
