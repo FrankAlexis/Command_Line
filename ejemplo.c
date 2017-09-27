@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "parser.h"
-
 #define TAM 100
 
 void getMycd(char*);
@@ -32,6 +31,8 @@ int main (){
       getMypwd(); 
     }else if(strcmp(items[0],"mydir") == 0){
       getMydir(items[1]);
+    }else if(strcmp(items[0],"exit") == 0){
+      exit(EXIT_SUCCESS);
     }
   }
   liberaItems (items);
