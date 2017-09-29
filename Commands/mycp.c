@@ -3,11 +3,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/stat.h>/*Libreria para utilizar las constantes que definen los
-                        privilegios que se tienen sobre un directorio*/
+/*Libreria para utilizar las constantes que definen los
+  privilegios que se tienen sobre un directorio*/
+#include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
-
 
 #ifndef BUF_SIZE
 #define BUF_SIZE 1024

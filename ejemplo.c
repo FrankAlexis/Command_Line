@@ -41,7 +41,7 @@ int main (){
       getMypwd();
     }else if(strcmp(items[0],"mydir") == 0){
       getMydir(items[1]);
-    }else if(strcmp(items[0],"exit") == 0){
+    }else if(strcmp(items[0],"myexit") == 0){
       exit(EXIT_SUCCESS);
     }else if(strcmp(items[0],"mycp") == 0){
       getMycp(items[1], items[2]);
@@ -56,12 +56,22 @@ int main (){
   liberaItems (items);
   return 0;
 }
+
 void my_handler(int sig) {
-  printf("Haz querido terminar con migo, mm? %d\n", sig);
+  printf("Para terminar el interprete de comandos debe digitar el comando myexit");
 }
+
 void getMyclear(){
-  const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
-  write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
+  int status;
+  pid_t pid_p = fork();
+  switch(pid_p){
+    case 0:
+      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/myclear",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/myclear", NULL);
+      break;
+    default:
+      wait(&status);
+  }
 }
 
 void getMytime(){
