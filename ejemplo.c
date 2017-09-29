@@ -2,19 +2,28 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "parser.h"
+
 #define TAM 100
 
+void my_handler(int sig);
 void getMycd(char*);
 void getMypwd();
 void getPrompt();
 void getMydir(char *);
 void getMycp(char*, char*);
+void getMytime();
+void getMyclear();
 
 int main (){
   char ** items;
   int num, background;
   char expresion[TAM];
+  struct sigaction my_action;
+  my_action.sa_handler = my_handler;
+  my_action.sa_flags = SA_RESTART;
+  sigaction(SIGINT, &my_action, NULL);
   while(1){
     getPrompt();
     fgets (expresion, TAM, stdin);
@@ -36,10 +45,36 @@ int main (){
       exit(EXIT_SUCCESS);
     }else if(strcmp(items[0],"mycp") == 0){
       getMycp(items[1], items[2]);
+    }else if (strcmp(items[0],"mytime") == 0){
+      getMytime();
+    }else if(strcmp(items[0],"myclear") == 0){
+      getMyclear();
+    }else{
+      printf("Error: Command no found\n");
     }
   }
   liberaItems (items);
   return 0;
+}
+void my_handler(int sig) {
+  printf("Haz querido terminar con migo, mm? %d\n", sig);
+}
+void getMyclear(){
+  const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
+  write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
+}
+
+void getMytime(){
+  int status;
+  pid_t pid_p = fork();
+  switch(pid_p){
+    case 0:
+      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mytime",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mytime", NULL);
+      break;
+    default:
+      wait(&status);
+  }
 }
 
 void getMycd(char* path){
