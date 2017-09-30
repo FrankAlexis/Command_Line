@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
     }
     int signal = atoi(argv[1]);
     pid_t pid = atoi(argv[2]);
-    //SIGKILL=9
+    //Envia una señal al proceso pid
     int value = kill(pid, signal);
     if(value == 0){
         printf("Signal sended");

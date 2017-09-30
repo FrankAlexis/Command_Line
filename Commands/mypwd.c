@@ -5,6 +5,7 @@
 int main(int argc, char *argv[]){
     printf("\n");
     char cwd[1024];
+    //Obtiene el directorio actual
     if (getcwd(cwd, sizeof(cwd)) != NULL){
         printf("%s/", cwd);
     }else{

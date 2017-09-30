@@ -72,11 +72,18 @@ int main (){
   liberaItems (items);
   return 0;
 }
+/**
+ * Método que captura la señal CTRL+c
+ * @param sig número de la seña enviada
+ **/
 void my_handler(int sig) {
   printf("End the CLI with 'myexit' command sig:%d",sig);
-  sleep(3);
+  sleep(2);
 }
 
+/**
+ * Limpia la pantalla de la terminar
+ * */
 void getMyclear(){
   char message[100];
   strcat(message,mypath);
@@ -85,33 +92,53 @@ void getMyclear(){
 }
 void getMyecho(char **items, int num){
   char message[100];
+  char msn[100];
   if (num>0){
     for (int i=1; i<num; i++){
       strcat(message,items[i]);
       strcat(message," ");
     }
   }
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/myecho",
-          "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/myecho", message,NULL);
+  strcat(msn,mypath);
+  strcat(msn,"myecho");
+  execl(msn,msn, message,NULL);
 }
 
+/**
+ * Obtiene la hora actual del sistema 
+ * */
 void getMytime(){
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mytime",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mytime", NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"mytime");
+  execl(message,message, NULL);
 }
 
+/**
+ * Cambia de directorio de trabajo
+ * @param path dirección del directorio
+ * */
 void getMycd(char* path){
+  //Llamado al sistema chdir
   int value = chdir(path);
+  //En caso de error envia el mensaje correspondiente
   if(value == -1){
     perror("chdir()");
   }
 }
-
+/**
+ * Obtiene la dirección del actual directorio
+ * */
 void getMypwd(){
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mypwd",
-        "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mypwd", NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"mypwd");
+  execl(message,message, NULL);
 }
 
+/**
+ * Imprime el usuario y el directorio de trabajo actual
+ * */
 void getPrompt(){
   printf("\n");
   char *p = getenv("USER");
@@ -126,19 +153,33 @@ void getPrompt(){
       perror("getcwd() error");
   }
 }
-
+/**
+ * Imprime los archivos de un directorio de trabajo
+ * @param path dirección del directorio
+ * */
 void getMydir(char* path){
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mydir",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mydir",path, NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"mydir");
+  execl(message,message,path, NULL);
 }
 
 void getMycp(char* sourcePath, char* targetPath){
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mycp",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"mycp");
+  execl(message, message,sourcePath,targetPath, NULL);
 
 }
 
+/**
+ * Enviar una determinada señan a un proceso
+ * @param pid identificador del proceso
+ * @param sig tipo de señal
+ * */
 void getMykill(char *pid, char* sig){
-  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mykill",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mykill",pid,sig, NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"mykill");
+  execl(message,message,sig,pid, NULL);
 }
