@@ -4,13 +4,14 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]){
-    if( argc != 2){
+    if( argc != 3){
         perror("Arguments error");
         exit(EXIT_FAILURE);
     }
-    pid_t pid = atoi(argv[1]);
+    int signal = atoi(argv[1]);
+    pid_t pid = atoi(argv[2]);
     //SIGKILL=9
-    int value = kill(pid, SIGKILL);
+    int value = kill(pid, signal);
     if(value == 0){
         printf("Signal sended");
     }else{

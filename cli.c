@@ -6,6 +6,7 @@
 #include "parser.h"
 
 #define TAM 100
+static const char mypath[] =  "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/";
 
 void my_handler(int sig);
 void getMycd(char*);
@@ -16,7 +17,7 @@ void getMyecho(char **, int);
 void getMycp(char*, char*);
 void getMytime();
 void getMyclear();
-void getMykill(char *);
+void getMykill(char *, char*);
 
 int main (){
   char ** items;
@@ -27,7 +28,7 @@ int main (){
   my_action.sa_flags = SA_RESTART;
   sigaction(SIGINT, &my_action, NULL);
   while(1){
-    getPrompt();
+    getPrompt();  
     fgets (expresion, TAM, stdin);
     num = separaItems (expresion, &items, &background);
     printf ("Numero de parametros: %d\n", num);
@@ -55,13 +56,15 @@ int main (){
           }else if(strcmp(items[0],"myclear") == 0){
             getMyclear();
           }else if(strcmp(items[0],"mykill") == 0){
-            getMykill(items[1]);
+            getMykill(items[1], items[2]);
           }else{
             perror("Command not found\n");
           }
           break;
         default:
-          wait(&status);
+          if(background==0){
+            wait(&status);
+          }
           break;
       }
     }
@@ -70,12 +73,15 @@ int main (){
   return 0;
 }
 void my_handler(int sig) {
-  printf("End the CLI with 'myexit' command ");
+  printf("End the CLI with 'myexit' command sig:%d",sig);
+  sleep(3);
 }
 
 void getMyclear(){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear", NULL);
+  char message[100];
+  strcat(message,mypath);
+  strcat(message,"myclear");
+  execl(message,message, NULL);
 }
 void getMyecho(char **items, int num){
   char message[100];
@@ -85,13 +91,13 @@ void getMyecho(char **items, int num){
       strcat(message," ");
     }
   }
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho",
-          "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho", message,NULL);
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/myecho",
+          "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/myecho", message,NULL);
 }
 
 void getMytime(){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime", NULL);
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mytime",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mytime", NULL);
 }
 
 void getMycd(char* path){
@@ -102,8 +108,8 @@ void getMycd(char* path){
 }
 
 void getMypwd(){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd",
-        "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd", NULL);
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mypwd",
+        "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mypwd", NULL);
 }
 
 void getPrompt(){
@@ -122,17 +128,17 @@ void getPrompt(){
 }
 
 void getMydir(char* path){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",path, NULL);
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mydir",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mydir",path, NULL);
 }
 
 void getMycp(char* sourcePath, char* targetPath){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mycp",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
 
 }
 
-void getMykill(char *pid){
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",pid, NULL);
+void getMykill(char *pid, char* sig){
+  execl("/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mykill",
+            "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/mykill",pid,sig, NULL);
 }
