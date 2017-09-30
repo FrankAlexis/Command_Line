@@ -7,6 +7,9 @@
 #include <sys/stat.h>
 #include <sys/syscall.h>
 
+/**
+ * Estrcutura que almacena la configuración de un directorio o archivo
+ * **/
 struct directory{
     long           d_ino;
     off_t          d_off;
@@ -14,6 +17,9 @@ struct directory{
     char           d_name[];
 };
 
+/**
+ * Tamaño del buffer
+ * */
 #define BUF_SIZE 1024
 
 char* getDirectoryType(char);
@@ -31,6 +37,9 @@ int main(int argc, char *argv[]){
         perror("Arguments error");
         exit(EXIT_FAILURE);
     }
+    //Abre el diectorio enviado como argv[1] dependiendo del tipo
+    //O_RDONLY abre el directorio en solo lectura
+    //O_DIRECTORY abre el archivo si es un directorio
     fd = open(argv[1] , O_RDONLY | O_DIRECTORY );
     if (fd == -1){
         /*Imprime un mensaje estandar de error describiendo el ultimo error
@@ -59,6 +68,10 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
+/**
+ * Imprime el tipo de directorio
+ * @param d_type tipo de directorio
+ * */
 char* getDirectoryType(char d_type){
     switch(d_type){
         case DT_REG:

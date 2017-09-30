@@ -65,7 +65,6 @@ int main (){
         default:
           if(background==0){
             wait(&status);
-            printf("salí del estatus" );
           }
           break;
       }
@@ -74,33 +73,41 @@ int main (){
   liberaItems (items);
   return 0;
 }
+/**
+ * Método que captura la señal CTRL+c
+ * @param sig número de la seña enviada
+ **/
 void my_handler(int sig) {
   printf("End the CLI with 'myexit' command sig:%d",sig);
-  sleep(3);
+  sleep(2);
 }
 
 void getMyclear(char **items, int num){
-  char message[100];
+  char binPath[100];
   if(num!=1){
     perror("The command no needs arguments");
     exit(EXIT_FAILURE);
   }
-  strcat(message,mypath);
-  strcat(message,"myclear");
-  execl(message,message, NULL);
+  strcat(binPath,mypath);
+  strcat(binPath,"myclear");
+  execl(binPath,binPath, NULL);
 }
 void getMyecho(char **items, int num){
   char message[100];
+  strcpy(message,"");
   if(num<2){
     perror("The command needs 1 argument. myecho <message>");
     exit(EXIT_FAILURE);
   }
-    for (int i=1; i<num; i++){
+  for (int i=1; i<num; i++){
       strcat(message,items[i]);
       strcat(message," ");
   }
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho",
-          "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho", message,NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"myecho");
+  execl(binPath,binPath,message,NULL);
+
 }
 
 void getMytime(char **items, int num){
@@ -108,8 +115,10 @@ void getMytime(char **items, int num){
     perror("The command no needs arguments");
     exit(EXIT_FAILURE);
   }
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime", NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mytime");
+  execl(binPath,binPath,NULL);
 }
 
 void getMycd(char **items, int num){
@@ -119,6 +128,7 @@ void getMycd(char **items, int num){
   }
   char* path = items[1];
   int value = chdir(path);
+  //En caso de error envia el mensaje correspondiente
   if(value == -1){
     perror("chdir()");
   }
@@ -129,10 +139,15 @@ void getMypwd(char **items, int num){
     perror("The command no needs arguments");
     exit(EXIT_FAILURE);
   }
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd",
-        "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd", NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mypwd");
+  execl(binPath,binPath, NULL);
 }
 
+/**
+ * Imprime el usuario y el directorio de trabajo actual
+ * */
 void getPrompt(){
   printf("\n");
   char *p = getenv("USER");
@@ -154,8 +169,10 @@ void getMydir(char **items, int num){
     exit(EXIT_FAILURE);
   }
   char* path = items[1];
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",path, NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mydir");
+  execl(binPath,binPath,path, NULL);
 }
 
 void getMycp(char **items, int num){
@@ -165,12 +182,18 @@ void getMycp(char **items, int num){
   }
   char* sourcePath = items[1];
   char* targetPath = items[2];
-  printf("%s %s\n",sourcePath,targetPath );
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mycp");
+  execl(binPath, binPath,sourcePath,targetPath, NULL);
 
 }
 
+/**
+ * Enviar una determinada señan a un proceso
+ * @param pid identificador del proceso
+ * @param sig tipo de señal
+ * */
 void getMykill(char **items, int num){
   if(num!=3){
     perror("The command needs only 2 arguments. mykill <signal> <pid>");
@@ -178,16 +201,21 @@ void getMykill(char **items, int num){
   }
   char* sig = items[1];
   char *pid = items[2];
-
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",sig,pid, NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mykill");
+  execl(binPath,binPath,sig,pid, NULL);
 }
+
 
 void getMypause(char **items, int num){
   if(num!=1){
     perror("The command no needs arguments.");
     exit(EXIT_FAILURE);
   }
-  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypause",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypause",NULL);
+  char binPath[100];
+  strcat(binPath,mypath);
+  strcat(binPath,"mypause");
+  execl(binPath,binPath,NULL);
+
 }
