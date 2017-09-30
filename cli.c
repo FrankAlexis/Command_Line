@@ -31,36 +31,39 @@ int main (){
     fgets (expresion, TAM, stdin);
     num = separaItems (expresion, &items, &background);
     printf ("Numero de parametros: %d\n", num);
-
-    /*
-    if (num>0){
-      for (int i=0; i<num; i++){
-        printf ("%d \"%s\"\n", i+1, items[i]);
-        printf ("Background: %d\n", background);
-      }
-    }
-    */
-
     if(strcmp(items[0],"mycd") == 0 ){
       getMycd(items[1]);
-    }else if( strcmp(items[0],"mypwd") == 0){
-      getMypwd();
-    }else if(strcmp(items[0],"mydir") == 0){
-      getMydir(items[1]);
     }else if(strcmp(items[0],"myexit") == 0){
       exit(EXIT_SUCCESS);
-    }else if(strcmp(items[0],"mycp") == 0){
-      getMycp(items[1], items[2]);
-    }else if (strcmp(items[0],"mytime") == 0){
-      getMytime();
-    }else if (strcmp(items[0],"myecho") == 0){
-      getMyecho(items,num);
-    }else if(strcmp(items[0],"myclear") == 0){
-      getMyclear();
-    }else if(strcmp(items[0],"mykill") == 0){
-      getMykill(items[1]);
     }else{
-      perror("Command not found\n");
+      int status;
+      pid_t pid_p = fork();
+      switch(pid_p){
+        case 0:
+          if( strcmp(items[0],"mypwd") == 0){
+            getMypwd();
+          }else if(strcmp(items[0],"mydir") == 0){
+            getMydir(items[1]);
+          }else if(strcmp(items[0],"myexit") == 0){
+            exit(EXIT_SUCCESS);
+          }else if(strcmp(items[0],"mycp") == 0){
+            getMycp(items[1], items[2]);
+          }else if (strcmp(items[0],"mytime") == 0){
+            getMytime();
+          }else if (strcmp(items[0],"myecho") == 0){
+            getMyecho(items,num);
+          }else if(strcmp(items[0],"myclear") == 0){
+            getMyclear();
+          }else if(strcmp(items[0],"mykill") == 0){
+            getMykill(items[1]);
+          }else{
+            perror("Command not found\n");
+          }
+          break;
+        default:
+          wait(&status);
+          break;
+      }
     }
   }
   liberaItems (items);
@@ -71,48 +74,24 @@ void my_handler(int sig) {
 }
 
 void getMyclear(){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear",
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear",
             "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear", NULL);
-      break;
-    default:
-      wait(&status);
-  }
 }
 void getMyecho(char **items, int num){
-  int status;
   char message[100];
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-    if (num>0){
-      for (int i=1; i<num; i++){
-        strcat(message,items[i]);
-        strcat(message," ");
-      }
+  if (num>0){
+    for (int i=1; i<num; i++){
+      strcat(message,items[i]);
+      strcat(message," ");
     }
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho", message,NULL);
-      break;
-    default:
-      wait(&status);
   }
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho",
+          "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho", message,NULL);
 }
 
 void getMytime(){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime",
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime",
             "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime", NULL);
-      break;
-    default:
-      wait(&status);
-  }
 }
 
 void getMycd(char* path){
@@ -121,67 +100,39 @@ void getMycd(char* path){
     perror("chdir()");
   }
 }
+
 void getMypwd(){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd", NULL);
-      break;
-    default:
-      wait(&status);
-  }
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd",
+        "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd", NULL);
 }
 
 void getPrompt(){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/prompt",
-            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/prompt", NULL);
-      break;
-    default:
-      wait(&status);
+  printf("\n");
+  char *p = getenv("USER");
+  if(p == NULL){
+      exit(EXIT_FAILURE);
+  }
+  printf("%s@:",p);
+  char cwd[1024];
+  if (getcwd(cwd, sizeof(cwd)) != NULL){
+      printf("%s>", cwd);
+  }else{
+      perror("getcwd() error");
   }
 }
 
 void getMydir(char* path){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",
             "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",path, NULL);
-      break;
-    default:
-      wait(&status);
-  }
 }
 
 void getMycp(char* sourcePath, char* targetPath){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",
             "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
-      break;
-    default:
-      wait(&status);
-  }
+
 }
 
 void getMykill(char *pid){
-  int status;
-  pid_t pid_p = fork();
-  switch(pid_p){
-    case 0:
-      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",
+  execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",
             "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",pid, NULL);
-      break;
-    default:
-      wait(&status);
-  }
 }
