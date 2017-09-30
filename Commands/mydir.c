@@ -1,5 +1,5 @@
 #define _GNU_SOURCE
-#include <dirent.h>     /* Defines DT_* constants */
+#include <dirent.h>     /*Define las constantes DT_*/
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>

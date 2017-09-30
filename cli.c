@@ -12,9 +12,11 @@ void getMycd(char*);
 void getMypwd();
 void getPrompt();
 void getMydir(char *);
+void getMyecho(char **, int);
 void getMycp(char*, char*);
 void getMytime();
 void getMyclear();
+void getMykill(char *);
 
 int main (){
   char ** items;
@@ -29,12 +31,16 @@ int main (){
     fgets (expresion, TAM, stdin);
     num = separaItems (expresion, &items, &background);
     printf ("Numero de parametros: %d\n", num);
+
+    /*
     if (num>0){
       for (int i=0; i<num; i++){
         printf ("%d \"%s\"\n", i+1, items[i]);
         printf ("Background: %d\n", background);
       }
     }
+    */
+
     if(strcmp(items[0],"mycd") == 0 ){
       getMycd(items[1]);
     }else if( strcmp(items[0],"mypwd") == 0){
@@ -47,18 +53,21 @@ int main (){
       getMycp(items[1], items[2]);
     }else if (strcmp(items[0],"mytime") == 0){
       getMytime();
+    }else if (strcmp(items[0],"myecho") == 0){
+      getMyecho(items,num);
     }else if(strcmp(items[0],"myclear") == 0){
       getMyclear();
+    }else if(strcmp(items[0],"mykill") == 0){
+      getMykill(items[1]);
     }else{
-      printf("Error: Command no found\n");
+      perror("Command not found\n");
     }
   }
   liberaItems (items);
   return 0;
 }
-
 void my_handler(int sig) {
-  printf("Para terminar el interprete de comandos debe digitar el comando myexit");
+  printf("End the CLI with 'myexit' command ");
 }
 
 void getMyclear(){
@@ -66,8 +75,27 @@ void getMyclear(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/myclear",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/myclear", NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myclear", NULL);
+      break;
+    default:
+      wait(&status);
+  }
+}
+void getMyecho(char **items, int num){
+  int status;
+  char message[100];
+  pid_t pid_p = fork();
+  switch(pid_p){
+    case 0:
+    if (num>0){
+      for (int i=1; i<num; i++){
+        strcat(message,items[i]);
+        strcat(message," ");
+      }
+    }
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/myecho", message,NULL);
       break;
     default:
       wait(&status);
@@ -79,8 +107,8 @@ void getMytime(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mytime",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mytime", NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mytime", NULL);
       break;
     default:
       wait(&status);
@@ -98,8 +126,8 @@ void getMypwd(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mypwd",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mypwd", NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mypwd", NULL);
       break;
     default:
       wait(&status);
@@ -111,8 +139,8 @@ void getPrompt(){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/prompt",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/prompt", NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/prompt",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/prompt", NULL);
       break;
     default:
       wait(&status);
@@ -124,8 +152,8 @@ void getMydir(char* path){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mydir",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mydir",path, NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mydir",path, NULL);
       break;
     default:
       wait(&status);
@@ -137,8 +165,21 @@ void getMycp(char* sourcePath, char* targetPath){
   pid_t pid_p = fork();
   switch(pid_p){
     case 0:
-      execl("/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mycp",
-            "/home/frank/Desktop/operative system/Lab_3.1/Command Line/Commands/mycp",sourcePath,targetPath, NULL);
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mycp",sourcePath,targetPath, NULL);
+      break;
+    default:
+      wait(&status);
+  }
+}
+
+void getMykill(char *pid){
+  int status;
+  pid_t pid_p = fork();
+  switch(pid_p){
+    case 0:
+      execl("/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",
+            "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/mykill",pid, NULL);
       break;
     default:
       wait(&status);
