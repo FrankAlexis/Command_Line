@@ -30,9 +30,9 @@ int main(int argc, char *argv[]){
     struct directory*d;
     int bpos;
     char d_type;
-    for(int i=0; i< argc; i++){
+    /*for(int i=0; i< argc; i++){
         printf("%d:%s\n",i,argv[i]);
-    }
+    }*/
     if( argc != 2){
         perror("Arguments error");
         exit(EXIT_FAILURE);

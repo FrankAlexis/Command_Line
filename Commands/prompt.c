@@ -4,6 +4,7 @@
 #include <errno.h>
 int main(int argc, char *argv[]){
     printf("\n");
+    //Devuelve el usuario actual
     char *p = getenv("USER");
     if(p == NULL){
         return EXIT_FAILURE;

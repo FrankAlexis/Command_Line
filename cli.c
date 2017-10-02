@@ -6,7 +6,7 @@
 #include "parser.h"
 
 #define TAM 100
-static const char mypath[] =  "/home/estudiantes/frank.castrillon/Desktop/Command_Line/Commands/";
+static const char mypath[] =  "/home/frank/Desktop/operative system/Lab_3.1/Command_Line/Commands/";
 
 void my_handler(int sig);
 void getMycd(char **, int);
@@ -24,15 +24,19 @@ int main (){
   char ** items;
   int num, background;
   char expresion[TAM];
-  struct sigaction my_action;
-  my_action.sa_handler = my_handler;
-  my_action.sa_flags = SA_RESTART;
-  sigaction(SIGINT, &my_action, NULL);
+  struct sigaction my_action_ignore;
+  struct sigaction my_action_kill;
+  my_action_ignore.sa_handler = SIG_IGN;
+  my_action_ignore.sa_flags = SA_RESTART;
+  sigaction(SIGINT, &my_action_ignore, NULL);
+  my_action_kill.sa_handler = my_handler;
+  my_action_kill.sa_flags = SA_RESTART;
+  sigaction(SIGTERM, &my_action_kill, NULL);
   while(1){
     getPrompt();
     fgets (expresion, TAM, stdin);
     num = separaItems (expresion, &items, &background);
-    printf ("Numero de parametros: %d\n", num);
+    //printf ("Numero de parametros: %d\n", num);
     if(strcmp(items[0],"mycd") == 0 ){
       getMycd(items,num);
     }else if(strcmp(items[0],"myexit") == 0){
@@ -57,7 +61,8 @@ int main (){
           }else if(strcmp(items[0],"mykill") == 0){
             getMykill(items,num);
           }else if(strcmp(items[0],"mypause") == 0){
-            getMypause(items,num);
+            //getMypause(items,num);
+            pause();
           }else{
             perror("Command not found\n");
           }
@@ -217,5 +222,4 @@ void getMypause(char **items, int num){
   strcat(binPath,mypath);
   strcat(binPath,"mypause");
   execl(binPath,binPath,NULL);
-
 }
