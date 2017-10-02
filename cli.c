@@ -24,10 +24,13 @@ int main (){
   char ** items;
   int num, background;
   char expresion[TAM];
+  /*Controlar la señal emitida por CRT+C por medio de un handler*/
   struct sigaction my_action;
   my_action.sa_handler = my_handler;
   my_action.sa_flags = SA_RESTART;
   sigaction(SIGINT, &my_action, NULL);
+  /*Los comandos myexit y mycd son comandos internos por eso se ejecutan como funciones del CLI.
+  Para los demás comandos se crea un proceso hijo y se llama al ejecutable correspondiente*/
   while(1){
     getPrompt();
     fgets (expresion, TAM, stdin);
@@ -63,6 +66,7 @@ int main (){
           }
           break;
         default:
+          /*Significa que el comando no se debe ejecutar en segundo plano*/
           if(background==0){
             wait(&status);
           }
@@ -82,6 +86,11 @@ void my_handler(int sig) {
   sleep(2);
 }
 
+/**
+  Método que llama al ejecutable myclear. Si el usuario ingresa argumentos al comando
+  se retorna un error.
+**/
+
 void getMyclear(char **items, int num){
   char binPath[100];
   if(num!=1){
@@ -92,6 +101,11 @@ void getMyclear(char **items, int num){
   strcat(binPath,"myclear");
   execl(binPath,binPath, NULL);
 }
+
+/**
+  Método que llama al ejecutable myecho. Si el usuario ingresa más de 1 argumento al comando
+  se retorna un error.
+**/
 void getMyecho(char **items, int num){
   char message[100];
   strcpy(message,"");
@@ -110,6 +124,10 @@ void getMyecho(char **items, int num){
 
 }
 
+/**
+  Método que llama al ejecutable mytime. Si el usuario ingresa argumentos al comando
+  se retorna un error.
+**/
 void getMytime(char **items, int num){
   if(num!=1){
     perror("The command no needs arguments");
@@ -121,6 +139,10 @@ void getMytime(char **items, int num){
   execl(binPath,binPath,NULL);
 }
 
+/**
+  Método que llama al ejecutable mtcd. Si el usuario ingresa más de 1 argumento al comando
+  se retorna un error. Del array items se extrae la ruta a la cual se desea cambiar.
+**/
 void getMycd(char **items, int num){
   if(num!=2){
     perror("The command needs 1 argument. mycd <path>");
@@ -134,6 +156,11 @@ void getMycd(char **items, int num){
   }
 }
 
+
+/**
+  Método que llama al ejecutable mypwd. Si el usuario ingresa argumentos al comando
+  se retorna un error.
+**/
 void getMypwd(char **items, int num){
   if(num!=1){
     perror("The command no needs arguments");
@@ -163,6 +190,10 @@ void getPrompt(){
   }
 }
 
+/**
+  Método que llama al ejecutable mydir. Si el usuario ingresa más de 1 argumento al comando
+  se retorna un error.Del array items se extrae el directorio que se quiere listar.
+**/
 void getMydir(char **items, int num){
   if(num!=2){
     perror("The command needs only 1 argument. mydir <path>");
@@ -175,6 +206,11 @@ void getMydir(char **items, int num){
   execl(binPath,binPath,path, NULL);
 }
 
+/**
+  Método que llama al ejecutable mycp. Si el usuario ingresa más o menos de 2 argumentos 
+  al comando se retorna un error. Del array items se extrae la ruta del archivo que se quiere
+  copiar y la nueva ruta donde se quiere poner la copia.
+**/
 void getMycp(char **items, int num){
   if(num!=3){
     perror("The command needs only 2 arguments. mycp <source> <target>");
@@ -190,7 +226,7 @@ void getMycp(char **items, int num){
 }
 
 /**
- * Enviar una determinada señan a un proceso
+ * Método que llama al ejecutable mykill.Enviar una determinada señal a un proceso
  * @param pid identificador del proceso
  * @param sig tipo de señal
  * */
@@ -207,7 +243,10 @@ void getMykill(char **items, int num){
   execl(binPath,binPath,sig,pid, NULL);
 }
 
-
+/**
+  Método que llama al ejecutable mypause. Si el usuario ingresa argumentos al comando
+  se retorna un error.
+**/
 void getMypause(char **items, int num){
   if(num!=1){
     perror("The command no needs arguments.");

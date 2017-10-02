@@ -8,12 +8,12 @@
 #include <sys/syscall.h>
 
 /**
- * Estrcutura que almacena la configuración de un directorio o archivo
+ * Estructura que almacena la configuración de un directorio o archivo
  * **/
 struct directory{
     long           d_ino;
     off_t          d_off;
-    unsigned short d_reclen;
+    unsigned short d_reclen;/*Tamaño del directorio*/
     char           d_name[];
 };
 
@@ -48,6 +48,8 @@ int main(int argc, char *argv[]){
         perror("open");
         exit(EXIT_FAILURE);
     }
+    /* El ciclo no tiene condición, ya que se lee el directorio por bloques de 1024, por eso cuando 
+        nread=0 significa que no hay nada más por leer*/
     for ( ; ; ) {
         nread = syscall(SYS_getdents, fd, buf, BUF_SIZE);
         if (nread == -1){
@@ -58,6 +60,7 @@ int main(int argc, char *argv[]){
             break;
         }
         printf("file_type  name\n");
+        /*Se mueve por cada una de las estructuras directory para imprimir el nombre y el tipo de directorio. */
         for (bpos = 0; bpos < nread;) {
             d = (struct directory*) (buf + bpos);
             d_type = *(buf + bpos + d->d_reclen - 1);

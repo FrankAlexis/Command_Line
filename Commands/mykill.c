@@ -8,7 +8,9 @@ int main(int argc, char *argv[]){
         perror("Arguments error");
         exit(EXIT_FAILURE);
     }
+    //Se extrae de argv la señal
     int signal = atoi(argv[1]);
+    //Se extrae de argv el proceso
     pid_t pid = atoi(argv[2]);
     //Envia una señal al proceso pid
     int value = kill(pid, signal);
