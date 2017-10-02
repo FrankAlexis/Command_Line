@@ -7,7 +7,7 @@
   privilegios que se tienen sobre un directorio*/
 #include <sys/stat.h>
 #include <sys/syscall.h>
-#include <sys/types.h>
+#include <sys/types.h> /*Usada para ssize_t*/
 
 #ifndef BUF_SIZE
 #define BUF_SIZE 1024
